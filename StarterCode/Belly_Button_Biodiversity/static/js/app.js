@@ -31,18 +31,40 @@ function buildMetadata(sample) {
 
 function buildCharts(sample) {
   let url = `/samples/${sample}`
+  
   // @TODO: Use `d3.json` to fetch the sample data for the plots
   d3.json(url).then(data =>{
-    var trace = {
+    console.log(data.otu_labels.slice(0,10));
+    var trace1 = {
       labels: data.otu_ids.slice(0,10),
       values: data.sample_values.slice(0,10),
+      hovertext: data.otu_labels.slice(0,10),
       type: 'pie'
     }
-    var data = [trace];
-    var layout = {
+    var data1 = [trace1];
+    var layout1 = {
       title: "'Bar' Chart",
     };
-    Plotly.newPlot('pie', data, layout);
+    Plotly.newPlot('pie', data1, layout1);
+
+
+
+    var trace2 = {
+      x: data.otu_ids,
+      y: data.sample_values,
+      mode: "markers",
+      type: "scatter",
+      hovertext: data.otu_labels,
+      marker: {
+        size: data.sample_values,
+        color: data.otu_ids
+      }
+    }
+    var layout2 = {
+      title: "Bubble Plot",
+    };
+    data2 = [trace2];
+    Plotly.newPlot('bubble', data2, layout2)
       });
   };
 
